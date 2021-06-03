@@ -18,14 +18,13 @@ $player.classList.add(player);
 //const $root = document.querySelector('.root');
 const $arenas = document.querySelector('.arenas');
 const $progressBar =  document.createElement('div');
-$progressBar.classList.add('progressBar');
+$progressBar.classList.add('progressbar');
 const $character =  document.createElement('div');
 $character.classList.add('character');
 
 const $life =  document.createElement('div');
 $life.classList.add('life');
-$life.style.width = '100%';
-$life.innerText = life;
+$life.style.width = life;
 const $name =  document.createElement('div');
 $name.classList.add('name');
 $name.innerText = name;
