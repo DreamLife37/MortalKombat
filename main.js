@@ -2,6 +2,7 @@
 const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
 
+
 const player1 = {
     player: 1,
     name: 'SCORPION',
@@ -11,7 +12,10 @@ const player1 = {
     attack: function (name) {
         console.log(name + ' ' + 'Fight ...')
     },
-
+    changeHP: changeHP,
+    renderHP: renderHP,
+    elHP: elHP,
+   
 }
 
 const player2 = {
@@ -23,9 +27,20 @@ const player2 = {
     attack: function (name) {
         console.log(name + ' ' + 'Fight ...')
     },
+    changeHP: changeHP,
+    renderHP: renderHP,
+    elHP: elHP,
+    
+};
 
-}
 
+function elHP() {
+ 
+       return document.querySelector(`.player${this.player} .life`);
+     //return document.querySelector('.player' + this.player + ' .life');
+     }
+
+ 
 
 //Для того чтобы убрать повторные действия по созданию элемента и добавление класса необходимо эти действия упаковать в функцию
 function createElement(tag, className) {
@@ -35,23 +50,6 @@ function createElement(tag, className) {
     }
     return $tag;
 }
-
-
-/* function createPlayer(player, name, life) {
-const $player =  document.createElement('div');
-const $progressBar =  document.createElement('div');
-const $character =  document.createElement('div');
-const $life =  document.createElement('div');
-const $name =  document.createElement('div');
-const $img = document.createElement('img');
-
-$player.classList.add(player);
-$progressBar.classList.add('progressbar');
-$character.classList.add('character');
-$life.classList.add('life');
-$life.style.width = life;
-$name.classList.add('name');
-$name.innerText = name; */
 
 
 function createPlayer(playerObj) {
@@ -67,9 +65,6 @@ function createPlayer(playerObj) {
     $name.innerText = playerObj.name;
     $img.src = playerObj.img;
 
-
-
-
     $player.appendChild($progressBar);
     $player.appendChild($character);
     $progressBar.appendChild($life);
@@ -79,53 +74,57 @@ function createPlayer(playerObj) {
 
 }
 
-function getRandomInRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+ 
+  function renderHP() {
+this.elHP().style.width = this.hp + '%';
+}
+ 
+function getRandom(num) {
+    return random = Math.ceil(Math.random() * num);
 }
 
 
-
-function changeHP(player) {
-    const $playerLife = document.querySelector('.player' + player.player + ' .life');
-
-
-
-    if (player.hp > 0) {
-        player.hp -= getRandomInRange(1, 20);
-        $playerLife.style.width = player.hp + '%';
-        if (player.hp < 0) {
-            player.hp = 0;
+function changeHP() {
+  
+    this.hp -= getRandom(20);
+    console.log(getRandom(20));
+   
+        if (this.hp <= 0) {
+            this.hp = 0;
         }
-    }
-    $playerLife.style.width = player.hp + '%';
-    console.log(player.hp);
-    if (player.hp <= 0) {
-        if (player1.hp > player2.hp) {
-            $arenas.appendChild(playerWin(player1.name));
-        } else {
-            $arenas.appendChild(playerWin(player2.name));
-        }
-    }
-
-
+        this.renderHP();
+      
 }
 
-function playerLose(name) {
-    const $loseTitle = createElement('div', 'loseTitle');
-    $loseTitle.innerText = name + ' lose';
-    return $loseTitle;
-}
 
 function playerWin(name) {
     const $winTitle = createElement('div', 'winTitle');
-    $winTitle.innerText = name + ' win';
-    $randomButton.disabled = true
-    return $winTitle;
+    if (name) { //если имя пришло выводи победителя
+        $winTitle.innerText = name + ' win';
+    } else { //иначе ничья
+        $winTitle.innerText = ' DRAW';
+    }
+     return $winTitle;
 }
 
 $randomButton.addEventListener('click', function () {
-    changeHP(player1);
-    changeHP(player2);
+       
+    player1.changeHP();
+    player2.changeHP();
+
+
+
+if (player1.hp === 0 || player2.hp === 0) {
+    $randomButton.disabled = true
+}
+
+if (player1.hp === 0 && player1.hp < player2.hp) {
+    $arenas.appendChild(playerWin(player2.name));
+} else if (player2.hp === 0 && player2.hp < player1.hp) {
+    $arenas.appendChild(playerWin(player1.name));
+} else if (player1.hp === 0 && player2.hp === 0) {
+    $arenas.appendChild(playerWin());
+}
 
 })
 
