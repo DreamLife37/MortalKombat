@@ -3,13 +3,56 @@ const $arenas = document.querySelector('.arenas');
 //const $randomButton = document.querySelector('.button');
 
 const $formFight = document.querySelector('.control');
+const $chat = document.querySelector('.chat')
+
+
 
 const HIT = {
-    head: 30,
-    body: 25,
-    foot: 20,
+    head: 30, //30
+    body: 25, //25
+    foot: 20, //20
 }
 const ATTACK = ['head', 'body', 'foot'];
+
+const logs = {
+    start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
+    end: [
+        'Результат удара [playerWins]: [playerLose] - труп',
+        '[playerLose] погиб от удара бойца [playerWins]',
+        'Результат боя: [playerLose] - жертва, [playerWins] - убийца',
+    ],
+    hit: [
+        '[playerDefence] пытался сконцентрироваться, но [playerKick] разбежавшись раздробил копчиком левое ухо врага.',
+        '[playerDefence] расстроился, как вдруг, неожиданно [playerKick] случайно раздробил грудью грудину противника.',
+        '[playerDefence] зажмурился, а в это время [playerKick], прослезившись, раздробил кулаком пах оппонента.',
+        '[playerDefence] чесал <вырезано цензурой>, и внезапно неустрашимый [playerKick] отчаянно размозжил грудью левый бицепс оппонента.',
+        '[playerDefence] задумался, но внезапно [playerKick] случайно влепил грубый удар копчиком в пояс оппонента.',
+        '[playerDefence] ковырялся в зубах, но [playerKick] проснувшись влепил тяжелый удар пальцем в кадык врага.',
+        '[playerDefence] вспомнил что-то важное, но внезапно [playerKick] зевнув, размозжил открытой ладонью челюсть противника.',
+        '[playerDefence] осмотрелся, и в это время [playerKick] мимоходом раздробил стопой аппендикс соперника.',
+        '[playerDefence] кашлянул, но внезапно [playerKick] показав палец, размозжил пальцем грудь соперника.',
+        '[playerDefence] пытался что-то сказать, а жестокий [playerKick] проснувшись размозжил копчиком левую ногу противника.',
+        '[playerDefence] забылся, как внезапно безумный [playerKick] со скуки, влепил удар коленом в левый бок соперника.',
+        '[playerDefence] поперхнулся, а за это [playerKick] мимоходом раздробил коленом висок врага.',
+        '[playerDefence] расстроился, а в это время наглый [playerKick] пошатнувшись размозжил копчиком губы оппонента.',
+        '[playerDefence] осмотрелся, но внезапно [playerKick] робко размозжил коленом левый глаз противника.',
+        '[playerDefence] осмотрелся, а [playerKick] вломил дробящий удар плечом, пробив блок, куда обычно не бьют оппонента.',
+        '[playerDefence] ковырялся в зубах, как вдруг, неожиданно [playerKick] отчаянно размозжил плечом мышцы пресса оппонента.',
+        '[playerDefence] пришел в себя, и в это время [playerKick] провел разбивающий удар кистью руки, пробив блок, в голень противника.',
+        '[playerDefence] пошатнулся, а в это время [playerKick] хихикая влепил грубый удар открытой ладонью по бедрам врага.',
+    ],
+    defence: [
+        '[playerKick] потерял момент и храбрый [playerDefence] отпрыгнул от удара открытой ладонью в ключицу.',
+        '[playerKick] не контролировал ситуацию, и потому [playerDefence] поставил блок на удар пяткой в правую грудь.',
+        '[playerKick] потерял момент и [playerDefence] поставил блок на удар коленом по селезенке.',
+        '[playerKick] поскользнулся и задумчивый [playerDefence] поставил блок на тычок головой в бровь.',
+        '[playerKick] старался провести удар, но непобедимый [playerDefence] ушел в сторону от удара копчиком прямо в пятку.',
+        '[playerKick] обманулся и жестокий [playerDefence] блокировал удар стопой в солнечное сплетение.',
+        '[playerKick] не думал о бое, потому расстроенный [playerDefence] отпрыгнул от удара кулаком куда обычно не бьют.',
+        '[playerKick] обманулся и жестокий [playerDefence] блокировал удар стопой в солнечное сплетение.'
+    ],
+    draw: 'Ничья - это тоже победа!'
+};
 
 
 const player1 = {
@@ -23,7 +66,6 @@ const player1 = {
     renderHP,
     elHP,
     attack,
-
 }
 
 const player2 = {
@@ -107,11 +149,13 @@ function getRandom(num) {
 function changeHP(valueFight) {
 
     this.hp -= valueFight;
+
     console.log(valueFight);
 
     if (this.hp <= 0) {
         this.hp = 0;
     }
+
 
 }
 
@@ -122,6 +166,7 @@ function playerWin(name) {
         $winTitle.innerText = name + ' win';
     } else { //иначе ничья
         $winTitle.innerText = ' DRAW';
+        generateLogs('draw', player2, player1);
     }
     return $winTitle;
 }
@@ -133,20 +178,18 @@ $arenas.appendChild(createPlayer(player2));
 function enemyAttack() {
     const hit = ATTACK[getRandom(3) - 1]; //тк массив начинается с 0, то вычитаем 1
     const defence = ATTACK[getRandom(3) - 1];
-    //console.log('####: hit', hit);
-    //console.log('####: defence', defence);
+    console.log('####: hit', hit);
+    console.log('####: defence', defence);
     return { //возвращаем enemyAttack() объект, в котором мы будем знать насколько ударил соперник
         value: getRandom(HIT[hit]),
         hit,
         defence,
+
     }
 }
 
+function playerAttack() {
 
-$formFight.addEventListener('submit', function (e) {
-    e.preventDefault();
-    //console.dir($formFight);
-    const enemy = enemyAttack();
     const attack = {};
 
     for (let item of $formFight) {
@@ -161,26 +204,13 @@ $formFight.addEventListener('submit', function (e) {
         }
         item.checked = false; //сброс radio button
     }
-
     console.log('## a:', attack);
-    console.log('## e:', enemy);
-    console.log(attack.value);
-    console.log(enemy.value);
+
+    return attack
+}
 
 
-
-    if (attack.hit !== enemy.defence) {
-        player2.changeHP(attack.value);
-        player2.renderHP();
-    }
-
-
-    if (enemy.hit !== attack.defence) {
-        player1.changeHP(enemy.value);
-        player1.renderHP();
-    }
-
-
+function showResult() {
     if (player1.hp === 0 || player2.hp === 0) {
         $formFight.disabled = true;
         createReloadButton();
@@ -188,11 +218,147 @@ $formFight.addEventListener('submit', function (e) {
 
     if (player1.hp === 0 && player1.hp < player2.hp) {
         $arenas.appendChild(playerWin(player2.name));
+        generateLogs('end', player2, player1);
     } else if (player2.hp === 0 && player2.hp < player1.hp) {
         $arenas.appendChild(playerWin(player1.name));
+        generateLogs('end', player1, player2);
     } else if (player1.hp === 0 && player2.hp === 0) {
         $arenas.appendChild(playerWin());
     }
+}
 
 
-})
+
+const date = new Date();
+const time = date.getHours() + ' ч.  ' + date.getMinutes() + ' мин.  ';
+
+
+
+function generateLogs(type, player1, player2) { //вторым аргументом передаем игрока который бъет 
+    console.log(type);
+    let text = '';
+    let el = '';
+
+    switch (type) {
+        case 'start':
+            text = logs[type].replace('[time]', time).replace('[player1]', player1.name).replace('[player2]', player2.name);;
+            console.log(text);
+            el = `<p>${text}</p>`;
+            $chat.insertAdjacentHTML('afterbegin', el);
+            break;
+
+        case 'hit':
+            text = logs[type][getRandom(18) - 1].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+            console.log(text);
+            el = `<p> ${time}  ${text}  -${100-player2.hp || 100-player1.hp} ${player2.hp || player1.hp}/100</p>`;
+            $chat.insertAdjacentHTML('afterbegin', el);
+            console.log(enemyAttack);
+            break;
+
+        case 'defence':
+            text = logs[type][getRandom(8) - 1].replace('[playerKick]', player2.name).replace('[playerDefence]', player1.name);
+            console.log(text);
+            el = `<p> ${time}  ${text} </p>`;
+            $chat.insertAdjacentHTML('afterbegin', el);
+            break;
+
+        case 'end':
+            text = logs[type][getRandom(3) - 1].replace('[playerWins]', player1.name).replace('[playerLose]', player2.name);
+            console.log(text);
+            el = `<p> ${time}  ${text} </p>`;
+            $chat.insertAdjacentHTML('afterbegin', el);
+            break;
+
+        case 'draw':
+            text = logs[type];
+            console.log(text);
+            el = `<p> ${time}  ${text} </p>`;
+            $chat.insertAdjacentHTML('afterbegin', el);
+    }
+
+
+
+    /*  if (type == 'start') {
+        const text = logs[type].replace('[time]', time).replace('[player1]', player1.name).replace('[player2]', player2.name);;
+        console.log(text);
+        const el = `<p>${text}</p>`;
+        $chat.insertAdjacentHTML('afterbegin', el);
+    } else if (type == 'hit') {
+        const text = logs[type][getRandom(18) - 1].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+        console.log(text);
+        //const el = '<p>'+text+'</p>'; //устарелый сбособ
+        const el = `<p> ${time}  ${text} ${player1.hp || player2.hp}/100</p>`;
+        $chat.insertAdjacentHTML('afterbegin', el);
+    } else if (type == 'defence') {
+        const text = logs[type][getRandom(8) - 1].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+        console.log(text);
+        const el = `<p> ${time}  ${text} </p>`;
+        $chat.insertAdjacentHTML('afterbegin', el);
+    } else if (type == 'end') {
+        const text = logs[type][getRandom(3) - 1].replace('[playerWins]', player1.name).replace('[playerLose]', player2.name);
+        console.log(text);
+        const el = `<p> ${time}  ${text} </p>`;
+        $chat.insertAdjacentHTML('afterbegin', el);
+    } else if (type == 'draw') {
+        const text = logs[type][0];
+        console.log(text);
+        const el = `<p> ${time}  ${text} </p>`;
+        $chat.insertAdjacentHTML('afterbegin', el);
+
+
+        console.log(player2.hp);
+    }
+
+
+*/
+}
+
+console.log(player1.hp);
+
+/* function generateLogs(type, player1, player2) {
+switch (type)
+} */
+
+function getHp() {
+
+}
+
+
+
+generateLogs('start', player2, player1);
+
+
+$formFight.addEventListener('submit', function (e) {
+    e.preventDefault();
+    console.log(player1.hp);
+    //console.dir($formFight);
+    const enemy = enemyAttack();
+    const attack = playerAttack();
+
+
+    console.log('## e:', enemy);
+    console.log(attack.value);
+
+
+    //По умолчанию мы играем за первого игрока, второй игрок - противник
+    if (enemy.hit !== attack.defence) {
+        player1.changeHP(enemy.value);
+        player1.renderHP();
+        generateLogs('hit', player2, player1); //вторым аргументом передаем игрока который бъет, третьим который защищается 
+
+    } else {
+        generateLogs('defence', player1, player2);
+    }
+
+    if (attack.hit !== enemy.defence) {
+        player2.changeHP(attack.value);
+        player2.renderHP();
+        generateLogs('hit', player1, player2);
+    } else {
+        generateLogs('defence', player1, player2);
+    }
+
+    showResult();
+
+
+});
