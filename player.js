@@ -8,7 +8,7 @@ export const player1 = {
     changeHP,
     renderHP,
     elHP,
-    attack, 
+    attack,
 }
 
 export const player2 = {
@@ -24,11 +24,8 @@ export const player2 = {
 };
 
 export function changeHP(valueFight) {
-
     this.hp -= valueFight;
-
     console.log(valueFight);
-
     if (this.hp <= 0) {
         this.hp = 0;
     }
@@ -37,7 +34,6 @@ export function changeHP(valueFight) {
 
 export function elHP() {
     return document.querySelector(`.player${this.player} .life`);
-    //return document.querySelector('.player' + this.player + ' .life');
 }
 
 

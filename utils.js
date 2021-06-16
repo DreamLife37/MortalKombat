@@ -1,14 +1,5 @@
-//let random;
-//export function getRandom(num) {
-    //return random = Math.ceil(Math.random() * num);
-//}
 
 export const $arenas = document.querySelector('.arenas');
-//const $randomButton = document.querySelector('.button');
-
-export const $formFight = document.querySelector('.control');
-//const $chat = document.querySelector('.chat')
-
 export function createElement(tag, className) {
     const $tag = document.createElement(tag);
     if (className) { //прописываем условие чтобы функция создавала класс, только в том случае если мы его передали
@@ -28,5 +19,3 @@ export function createReloadButton() {
         window.location.reload();
     });
 }
-
-//export default getRandom;
