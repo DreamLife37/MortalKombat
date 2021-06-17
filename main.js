@@ -1,83 +1,47 @@
 import {
-    player1,
-    player2,
-    changeHP,
-    elHP,
-    renderHP,
-    attack
-} from "./player.js";
+    HIT,
+    LOGS,
+    ATTACK
+} from './constants/index.js';
+
+import Player from './Player/index.js';
+
+/* import {
+    getRandom,
+    createElement,
+    getTime,
+    createReloadButton,
+    $arenas
+} from "./utils/index.js"; */
 
 import {
-    createElement,
-    $arenas,
-    createReloadButton,
-} from "./utils.js";
-import {
-    logs,
-    getTime,
     generateLogs,
-    getRandom,
     $chat,
     enemyAttack,
     playerAttack,
     $formFight,
+    showResult,
+    playerWin,
 } from "./generateLogs.js";
+
+export const player1 = new Player({
+    player: 1,
+    name: 'SCORPION',
+    hp: 100,
+    img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
+    rootSelectror: 'arenas',
+});
+
+export const player2 = new Player({
+    player: 2,
+    name: 'SUB-ZERO',
+    hp: 100,
+    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
+    rootSelectror: 'arenas',
+});
 
 //чтобы все обращения к DOM свести к минимуму вынесли $arenas из функции createPlayer
 
-const createPlayer = (playerObj) => {
-    const $player = createElement('div', 'player' + playerObj.player);
-    const $progressBar = createElement('div', 'progressbar');
-    const $character = createElement('div', 'character');
-    const $life = createElement('div', 'life');
-    const $name = createElement('div', 'name');
-    const $img = createElement('img');
-
-    $life.style.width = playerObj.hp + '%';
-    $name.innerText = playerObj.name;
-    $img.src = playerObj.img;
-
-    $player.appendChild($progressBar);
-
-    $player.appendChild($character);
-    $progressBar.appendChild($life);
-    $progressBar.appendChild($name);
-    $character.appendChild($img);
-    return $player;
-
-}
-
-
-const playerWin = (name) => {
-    const $winTitle = createElement('div', 'loseTitle');
-    if (name) { //если имя пришло выводи победителя
-        $winTitle.innerText = name + ' win';
-    } else { //иначе ничья
-        $winTitle.innerText = ' DRAW';
-       // generateLogs('draw', player2, player1);
-    }
-    return $winTitle;
-}
-
-
-const showResult = () => {
-    if (player1.hp === 0 || player2.hp === 0) {
-        $formFight.disabled = true;
-        createReloadButton();
-    }
-    console.log(player1.hp);
-    console.log(player2.hp);
-    if (player1.hp === 0 && player1.hp < player2.hp) {
-        $arenas.appendChild(playerWin(player2.name));
-        generateLogs('end', player2, player1);
-    } else if (player2.hp === 0 && player2.hp < player1.hp) {
-        $arenas.appendChild(playerWin(player1.name));
-        generateLogs('end', player1, player2);
-    } else if (player1.hp === 0 && player2.hp === 0) {
-        $arenas.appendChild(playerWin());
-        generateLogs('draw', player1, player2);
-    }
-}
 
 $formFight.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -107,9 +71,10 @@ $formFight.addEventListener('submit', (e) => {
 
 });
 
- const init = () => {
+const init = () => {
+    player1.createPlayer();
+    player2.createPlayer();
     generateLogs('start', player1, player2);
-    $arenas.appendChild(createPlayer(player1));
-    $arenas.appendChild(createPlayer(player2));
+
 };
 init();
