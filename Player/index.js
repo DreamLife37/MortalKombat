@@ -2,6 +2,9 @@ import {
     createElement
 } from '../utils/index.js';
 
+
+//import Player from "./player/index.js";
+
 const attack = () => {
     console.log(this.name + ' ' + 'Fight ...');
 }
@@ -24,8 +27,6 @@ class Player {
             this.hp = 0;
         }
     }
-
-
 
     elHP = () => {
         return document.querySelector(`.${this.selector} .life`);
@@ -59,7 +60,7 @@ class Player {
         $root.appendChild($player);
         return $player;
 
-    }
+    };
 
 }
 

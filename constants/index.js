@@ -1,3 +1,9 @@
+export const $arenas = document.querySelector('.arenas');
+export const $chat = document.querySelector('.chat');
+export const $formFight = document.querySelector('.control');
+
+
+
 export const HIT = {
     head: 60, //30
     body: 65, //25

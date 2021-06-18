@@ -13,7 +13,6 @@ export const getTime = () => {
     return `${date.getHours()}:${date.getMinutes()}`
 }
 
-export const $arenas = document.querySelector('.arenas');
 
 export function createReloadButton() {
     const $reloadWrap = createElement('div', 'reloadWrap'); //создание элемента и добавление ему класса
