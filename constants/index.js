@@ -1,4 +1,19 @@
-const logs = {
+export const $arenas = document.querySelector('.arenas');
+export const $chat = document.querySelector('.chat');
+export const $formFight = document.querySelector('.control');
+
+
+
+export const HIT = {
+    head: 60, //30
+    body: 65, //25
+    foot: 50, //20
+}
+
+export const ATTACK = ['head', 'body', 'foot'];
+
+export const LOGS = {
+
     start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
     end: [
         'Результат удара [playerWins]: [playerLose] - труп',
